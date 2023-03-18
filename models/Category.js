@@ -1,3 +1,5 @@
+const slugify = require("slugify");
+
 module.exports = (sequelize, DataTypes) => {
   let Category = sequelize.define(
     "Category",
@@ -9,6 +11,10 @@ module.exports = (sequelize, DataTypes) => {
       },
       name: {
         type: DataTypes.STRING,
+        unique: {
+          args: "name",
+          msg: "Thể loại đã tồn tại",
+        },
         allowNull: false,
       },
       slug: {
@@ -22,6 +28,27 @@ module.exports = (sequelize, DataTypes) => {
   );
 
   Category.associate = (models) => {};
+
+  // Category.addHook("beforeValidate", (category) => {
+  //   if (category.isNewRecord) {
+  //     category.slug = slugify(category.name, {
+  //       lower: true,
+  //       remove: undefined,
+  //       locale: "vi",
+  //       trim: true,
+  //     });
+  //   }
+  // });
+
+  Category.addHook("beforeUpdate", (category) => {
+    console.log("hello");
+    category.slug = slugify(category.name, {
+      lower: true,
+      remove: undefined,
+      locale: "vi",
+      trim: true,
+    });
+  })
 
   return Category;
 };
