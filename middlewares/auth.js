@@ -1,28 +1,28 @@
 const jwt = require("jsonwebtoken");
 const ApiError = require("../utils/ApiError");
 const httpStatus = require("http-status");
-const User = require("../models/user");
+const { User } = require("../models");
 
-const { jwt: jwtConfig } = require("../config/config")
+const { jwt: jwtConfig } = require("../config")
+const catchAsync = require("../utils/catchAsync");
 
-exports.protect = async (req, res, next) => {
+exports.protect = catchAsync(async (req, res, next) => {
   let token;
   if (req.headers.authorization?.startsWith("Bearer")) {
     token = req.headers.authorization.split(" ")[1];
   }
   if (!token) {
     return next(
-      new ApiError(httpStatus.UNAUTHORIZED, httpStatus.UNAUTHORIZED)
+      new ApiError(httpStatus.UNAUTHORIZED, "token is required")
     );
   }
   const decodedToken = jwt.verify(token, jwtConfig.accessSecret);
-  const { userId } = decodedToken;
+  const { sub: userId } = decodedToken;
   const user = await User.findByPk(userId);
 
   if (!user) {
     new ApiError(httpStatus[httpStatus.UNAUTHORIZED], httpStatus.UNAUTHORIZED);
   }
-
   req.user = user;
   return next();
-};
+});

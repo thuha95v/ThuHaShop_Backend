@@ -62,6 +62,10 @@ module.exports = (sequelize, DataTypes) => {
         values: ["admin", "mod", "user"],
         defaultValue: "user"
       },
+      isLock: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
+      },
       avatar: {
         type: DataTypes.STRING,
         allowNull: true,

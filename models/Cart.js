@@ -1,5 +1,3 @@
-const bcrypt = require("bcryptjs");
-
 module.exports = (sequelize, DataTypes) => {
   let Cart = sequelize.define(
     "Cart",
@@ -9,26 +7,13 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4,
       },
-      user_id: {
+      cart_id: {
         type: DataTypes.UUID,
-        allowNull: false
-      },
-      link: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      products: {
-        type: DataTypes.JSON,
         allowNull: false,
       },
-      history: {
-        type: DataTypes.JSON,
+      product_id: {
+        type: DataTypes.UUID,
         allowNull: false,
-      },
-      status: {
-        type: DataTypes.ENUM,
-        values: ["close", "open"],
-        defaultValue: "close"
       },
     },
     {
@@ -37,9 +22,16 @@ module.exports = (sequelize, DataTypes) => {
   );
 
   Cart.associate = (models) => {
-    Cart.belongsTo(models.User, {
+    Cart.belongsTo(models.CartManage, {
       foreignKey: {
-        name: "user_id",
+        name: "cart_id",
+      },
+    });
+
+    Cart.belongsTo(models.Product, {
+      as: "product",
+      foreignKey: {
+        name: "product_id",
       },
     });
   };
