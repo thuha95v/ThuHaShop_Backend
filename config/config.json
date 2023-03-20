@@ -2,7 +2,7 @@
   "node_env": "development",
   "development": {
     "host": "localhost",
-    "port": "3000",
+    "port": "3001",
     "mysql": {
       "username": "root",
       "password": "tF8jtP#zdz",
@@ -14,32 +14,34 @@
     "jwt": {
       "accessSecret": "D&(!8kb#WXk8+Qg7",
       "refreshSecret": "F8!PF2P@ZKt@n@JZ",
-      "accessExpiration": 1000,
+      "accessExpiration": 100000000,
       "refreshExpiration": 30
     },
-    "redis": {},
+    "redis": {
+      "host": "127.0.0.1",
+      "port": "6379",
+      "password": "!CnJbIcJqew"
+    },
     "cloudinary": {
       "cloudName": "dhlmdhzbz",
       "apiKey": "664472915342121",
       "apiSecret": "qZuy6eUSptCh-XrgREQtpIWbNZY",
       "secure": true
-    }
-  },
-  "test": {
-    "host": "localhost",
-    "mysql": {
-      "username": "root",
-      "password": "tF8jtP#zdz",
-      "database": "test",
-      "port": "3308",
-      "host": "194.233.67.57",
-      "dialect": "mysql"
     },
-    "jwt": {
-      "accessSecret": "hithaui1808",
-      "refreshSecret": "",
-      "accessExpiration": 2,
-      "refreshExpiration": 30
+    "email": {
+      "host": "smtp.gmail.com",
+      "port": 587,
+      "secure": false,
+      "auth": {
+        "user": "csdltlr@gmail.com", 
+        "pass": "jczbaljorawdszvn"
+      }
+    },
+    "vnpay": {
+      "vnpTmnCode": "PBK0SM2L",
+      "vnpHashSecret": "VPVJDEIQNGJXQGWHNGSKILRGTJCRAXYV",
+      "vnpUrl": "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html",
+      "vnpReturnUrl": "http://localhost:3000/api/v1/orders/status"
     }
   },
   "production": {
@@ -56,14 +58,34 @@
     "jwt": {
       "accessSecret": "D&(!8kb#WXk8+Qg7",
       "refreshSecret": "F8!PF2P@ZKt@n@JZ",
-      "accessExpiration": 2,
+      "accessExpiration": 100000000,
       "refreshExpiration": 30
+    },
+    "redis": {
+      "host": "redis",
+      "port": "6379",
+      "password": "!CnJbIcJqew"
     },
     "cloudinary": {
       "cloudName": "dhlmdhzbz",
       "apiKey": "664472915342121",
       "apiSecret": "qZuy6eUSptCh-XrgREQtpIWbNZY",
       "secure": true
+    },
+    "email": {
+      "host": "smtp.gmail.com",
+      "port": 587,
+      "secure": false,
+      "auth": {
+        "user": "csdltlr@gmail.com", 
+        "pass": "jczbaljorawdszvn"
+      }
+    },
+    "vnpay": {
+      "vnpTmnCode": "PBK0SM2L",
+      "vnpHashSecret": "VPVJDEIQNGJXQGWHNGSKILRGTJCRAXYV",
+      "vnpUrl": "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html",
+      "vnpReturnUrl": "http://128.199.98.169:3000/api/v1/orders/status"
     }
   }
 }
