@@ -48,7 +48,7 @@ const createOrUpdateCart = async (userId, products) => {
 
     let arrProduct = products.map((product) => {
       return {
-        product_id: product,
+        ...product,
         cart_id: cartManage.id,
       };
     });

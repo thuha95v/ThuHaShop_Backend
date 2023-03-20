@@ -1,4 +1,4 @@
-const bcrypt = require("bcryptjs");
+const slugify = require("slugify");
 
 module.exports = (sequelize, DataTypes) => {
   let Post = sequelize.define(
@@ -42,5 +42,24 @@ module.exports = (sequelize, DataTypes) => {
     });
   };
 
+  Post.addHook("beforeValidate", (post) => {
+    if (post.isNewRecord) {
+      post.slug = slugify(post.title, {
+        lower: true,
+        remove: undefined,
+        locale: "vi",
+        trim: true,
+      });
+    }
+  });
+
+  Post.addHook("beforeUpdate", (post) => {
+    post.slug = slugify(post.title, {
+      lower: true,
+      remove: undefined,
+      locale: "vi",
+      trim: true,
+    });
+  })
   return Post;
 };
