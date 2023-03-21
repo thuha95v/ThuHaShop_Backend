@@ -9,6 +9,8 @@ const imageRouter = require('./image.route');
 const productRouter = require('./product.route');
 const cartRouter = require('./cart.route');
 const postRouter = require('./post.route');
+const orderRouter = require('./order.route');
+
 
 // No auth
 const defaultRoutes = [
@@ -19,7 +21,11 @@ const defaultRoutes = [
   {
     path: '/posts',
     route: postRouter
-  }
+  },
+  {
+    path: '/products',
+    route: productRouter
+  },
 ];
 
 const protectRoutes = [
@@ -32,8 +38,8 @@ const protectRoutes = [
     route: imageRouter
   },
   {
-    path: "/products",
-    route: productRouter
+    path: "/orders",
+    route: orderRouter
   },
   {
     path: "/cart",

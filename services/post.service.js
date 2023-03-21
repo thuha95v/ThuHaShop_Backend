@@ -4,8 +4,16 @@ const { Post } = require("../models");
 const httpStatus = require("http-status");
 const ApiError = require("../utils/ApiError");
 
-const getPosts = () => {
-  return Post.findAll();
+const getPosts = (page, limit, q) => {
+  return Post.findAndCountAll({
+    where: {
+      title: {
+        [Op.like]: `%${q}%`
+      }
+    },
+    limit: parseInt(limit),
+    offset: parseInt(page * limit)
+  });
 };
 
 const createPost = async (postBody) => {

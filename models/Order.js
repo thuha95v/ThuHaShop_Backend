@@ -14,14 +14,18 @@ module.exports = (sequelize, DataTypes) => {
       customer_address: {
         type: DataTypes.STRING,
         allowNull: false,
+        unique: true,
       },
       phone: {
         type: DataTypes.STRING,
         allowNull: false,
+        unique: true,
       },
       pay_method: {
         type: DataTypes.ENUM,
         values: ["bank", "cash"],
+        allowNull: false,
+        defaultValue: "cash"
       }
     },
     {

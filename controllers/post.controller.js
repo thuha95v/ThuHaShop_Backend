@@ -3,8 +3,17 @@ const { postService } = require("../services");
 const catchAsync = require("../utils/catchAsync");
 
 const getPosts = catchAsync(async (req, res) => {
-  let posts = await postService.getPosts();
-  res.status(httpStatus.OK).send({ code: httpStatus.OK, data: posts });
+  let { page, limit, q = "" } = req.query;
+  if(!page){
+    page = 0;
+  }
+
+  if(!limit){
+    limit = 10
+  }
+  
+  let posts = await postService.getPosts(page, limit, q);
+  res.status(httpStatus.OK).send({ code: httpStatus.OK, total: posts.count, limit, data: posts.rows });
 });
 
 const createPost = catchAsync(async (req, res) => {
