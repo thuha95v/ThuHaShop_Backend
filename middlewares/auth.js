@@ -13,7 +13,7 @@ exports.protect = catchAsync(async (req, res, next) => {
   }
   if (!token) {
     return next(
-      new ApiError(httpStatus.UNAUTHORIZED, "token is required")
+      new ApiError(httpStatus.UNAUTHORIZED, "token là bắt buộc")
     );
   }
   const decodedToken = jwt.verify(token, jwtConfig.accessSecret);

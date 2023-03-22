@@ -1,3 +1,5 @@
+const slugify = require("slugify");
+
 module.exports = (sequelize, DataTypes) => {
   let Product = sequelize.define(
     "Product",
@@ -35,7 +37,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      quanlity: {
+      quantity: {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
@@ -43,9 +45,14 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
+      expiry: {
+        type: DataTypes.DATE,
+        // allowNull: false,
+      },
       tags: {
         type: DataTypes.JSON,
-        allowNull: false,
+        // allowNull: false,
+        defaultValue: ""
       },
     },
     {
@@ -60,6 +67,26 @@ module.exports = (sequelize, DataTypes) => {
       },
     });
   };
+
+  Product.addHook("beforeValidate", (product) => {
+    if (product.isNewRecord) {
+      product.slug = slugify(product.name, {
+        lower: true,
+        remove: undefined,
+        locale: "vi",
+        trim: true,
+      });
+    }
+  });
+
+  Product.addHook("beforeUpdate", (product) => {
+    product.slug = slugify(product.name, {
+      lower: true,
+      remove: undefined,
+      locale: "vi",
+      trim: true,
+    });
+  })
 
   return Product;
 };

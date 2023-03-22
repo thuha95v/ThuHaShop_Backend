@@ -12,7 +12,7 @@ const getProducts = (page, limit, name) => {
         [Op.like]: `${name}%`
       },
     },
-    limit: parseInt(limit),
+    limit: parseInt(limit - 1),
     offset: parseInt(page * limit)
   });
 };

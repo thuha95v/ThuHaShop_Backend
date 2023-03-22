@@ -4,11 +4,11 @@ const catchAsync = require("../utils/catchAsync");
 
 const getProducts = catchAsync(async (req, res) => {
   let { page, limit, q = ""} = req.query;
-  if(!page){
-    page = 0;
+  if(!page || parseInt(page) < 0){
+    page = 1;
   }
 
-  if(!limit){
+  if(!limit || parseInt(limit) > 100){
     limit = 10
   }
 
@@ -25,7 +25,7 @@ const createProduct = catchAsync(async (req, res) => {
     short_desc,
     long_desc,
     provide_by,
-    quanlity,
+    quantity,
     price,
     expiry,
     tags,
@@ -47,7 +47,7 @@ const updateCategory = catchAsync(async (req, res) => {
     short_desc,
     long_desc,
     provide_by,
-    quanlity,
+    quantity,
     price,
     expiry,
     tags,

@@ -4,11 +4,11 @@ const catchAsync = require("../utils/catchAsync");
 
 const getPosts = catchAsync(async (req, res) => {
   let { page, limit, q = "" } = req.query;
-  if(!page){
-    page = 0;
+  if(!page || parseInt(page) < 0){
+    page = 1;
   }
 
-  if(!limit){
+  if(!limit || parseInt(limit) > 100){
     limit = 10
   }
   

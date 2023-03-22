@@ -11,7 +11,7 @@ const getPosts = (page, limit, q) => {
         [Op.like]: `%${q}%`
       }
     },
-    limit: parseInt(limit),
+    limit: parseInt(limit - 1),
     offset: parseInt(page * limit)
   });
 };
