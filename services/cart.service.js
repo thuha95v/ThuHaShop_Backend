@@ -6,6 +6,11 @@ const ApiError = require("../utils/ApiError");
 
 const getCartByUserId = async (userId) => {
   const cartManage = await CartManage.findOne({ where: { user_id: userId } });
+
+  if(!cartManage){
+    throw new ApiError(httpStatus.NOT_FOUND, "Giỏ hàng trống")
+  }
+
   const cart = await Cart.findAll({
     where: { cart_id: cartManage.id },
     include: { model: Product, as: "product", attributes: {

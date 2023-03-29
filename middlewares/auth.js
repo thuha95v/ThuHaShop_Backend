@@ -21,7 +21,7 @@ exports.protect = catchAsync(async (req, res, next) => {
   const user = await User.findByPk(userId);
 
   if (!user) {
-    new ApiError(httpStatus[httpStatus.UNAUTHORIZED], httpStatus.UNAUTHORIZED);
+    new ApiError(httpStatus.UNAUTHORIZED, "Người dùng không tồn tại");
   }
   req.user = user;
   return next();
