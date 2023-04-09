@@ -14,12 +14,20 @@ module.exports = (sequelize, DataTypes) => {
       customer_address: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true,
+        validate: {
+          notNull: {
+            msg: "Địa chỉ không được trống"
+          }
+        },
       },
       phone: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true,
+        validate: {
+          notNull: {
+            msg: "SĐT không được trống"
+          }
+        },
       },
       pay_method: {
         type: DataTypes.ENUM,

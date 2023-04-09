@@ -16,6 +16,13 @@ const getPosts = catchAsync(async (req, res) => {
   res.status(httpStatus.OK).send({ code: httpStatus.OK, total: posts.count, limit, data: posts.rows });
 });
 
+const getPostById = catchAsync(async(req, res) => {
+  const { id } = req.params
+
+  const post = await postService.getPostById(id)
+  res.status(httpStatus.OK).send({ code: httpStatus.OK, data: post })
+})
+
 const createPost = catchAsync(async (req, res) => {
   let user = req.user;
 
@@ -55,4 +62,4 @@ const deletePost = catchAsync(async (req, res) => {
   res.status(httpStatus.OK).send();
 });
 
-module.exports = { getPosts, createPost, updatePost, deletePost };
+module.exports = { getPostById, getPosts, createPost, updatePost, deletePost };

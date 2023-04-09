@@ -28,12 +28,20 @@ module.exports = (sequelize, DataTypes) => {
       email: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true,
+        validate: {
+          isEmail: {
+            msg: "Email không đúng định dạng"
+          },
+          notNull: {
+            msg: "Email không được trống"
+          }
+        },
+        unique: {
+          name: 'email',
+          msg: 'Email đã tồn tại',
+        },
         set(email) {
           this.setDataValue("email", email.toLowerCase());
-        },
-        validate: {
-          isEmail: true,
         },
       },
       password: {

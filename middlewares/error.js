@@ -1,13 +1,22 @@
 const httpStatus = require('http-status');
 const ApiError = require('../utils/ApiError');
+const db = require("../models")
+
 const errorConverter = (err, req, res, next) => {
-  let error = err;
-  if (!(error instanceof ApiError)) {
-    const statusCode =
-      error.statusCode ||  httpStatus.INTERNAL_SERVER_ERROR;
-    const message = error.message || httpStatus[statusCode];
-    error = new ApiError(statusCode, message, false, err.stack);
+  let statusCode = httpStatus.INTERNAL_SERVER_ERROR
+  let message = httpStatus[statusCode]
+
+  if (err instanceof db.Sequelize.ValidationError){
+    statusCode = httpStatus.BAD_REQUEST
+    message = err.message.replace(/Validation error|notNull Violation/, "Kiểm tra lại")
+  } 
+  else if (!(err instanceof ApiError)) {
+    message = err.message;
+  }else {
+    return next(err)
   }
+
+  const error = new ApiError(statusCode, message, false, err.stack);
   next(error);
 };
 

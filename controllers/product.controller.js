@@ -16,6 +16,14 @@ const getProducts = catchAsync(async (req, res) => {
   res.status(httpStatus.OK).send({ code: httpStatus.OK, total: products.count, limit, data: products.rows });
 });
 
+const getProductById = catchAsync(async(req, res) => {
+  const { id } = req.params
+
+  const product = await productService.getProductById(id)
+
+  res.status(httpStatus.OK).send({ code: httpStatus.OK, data: product })
+})
+
 const createProduct = catchAsync(async (req, res) => {
   let bodyData = await formDataService.parseForm(req);
 
@@ -67,4 +75,4 @@ const deleteProduct = catchAsync(async (req, res) => {
   res.status(httpStatus.OK).send();
 });
 
-module.exports = { getProducts, createProduct, updateCategory, deleteProduct };
+module.exports = { getProductById, getProducts, createProduct, updateCategory, deleteProduct };

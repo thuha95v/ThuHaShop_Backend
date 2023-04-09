@@ -18,10 +18,10 @@ exports.protect = catchAsync(async (req, res, next) => {
   }
   const decodedToken = jwt.verify(token, jwtConfig.accessSecret);
   const { sub: userId } = decodedToken;
-  const user = await User.findByPk(userId);
 
+  const user = await User.findByPk(userId);
   if (!user) {
-    new ApiError(httpStatus.UNAUTHORIZED, "Người dùng không tồn tại");
+    throw new ApiError(httpStatus.UNAUTHORIZED, "Người dùng không tồn tại");
   }
   req.user = user;
   return next();
