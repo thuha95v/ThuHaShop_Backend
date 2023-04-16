@@ -19,9 +19,6 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
-      note: {
-        type: DataTypes.STRING,
-      }
     },
     {
       tableName: "product_order",
@@ -30,12 +27,14 @@ module.exports = (sequelize, DataTypes) => {
 
   ProductOrder.associate = (models) => {
     ProductOrder.belongsTo(models.Product, {
+      as: "info",
       foreignKey: {
         name: "product_id",
       },
     });
 
     ProductOrder.belongsTo(models.Order, {
+      as: "order",
       foreignKey: {
         name: "order_id",
       },

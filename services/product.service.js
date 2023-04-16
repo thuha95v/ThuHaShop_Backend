@@ -1,6 +1,6 @@
 const { Op } = require("sequelize");
 const { Product } = require("../models");
-const { imageService } = require("./index");
+const { imageService,categoryService } = require("./index");
 
 const httpStatus = require("http-status");
 const ApiError = require("../utils/ApiError");
@@ -12,12 +12,27 @@ const getProducts = (page, limit, name) => {
         [Op.like]: `${name}%`
       },
     },
-    limit: parseInt(limit - 1),
-    offset: parseInt(page * limit)
+    limit: parseInt(limit),
+    offset: parseInt((page - 1) * limit)
   });
 };
 
+const getProductById = async(id) => {
+  return Product.findByPk(id)
+}
+
 const createProduct = async (productBody, imageUpload) => {
+
+  if(!imageUpload){
+    throw new ApiError(httpStatus.BAD_REQUEST, "Ảnh là bắt buộc");
+  }
+
+  let category = await categoryService.getById(productBody.category_id)
+
+  if(!category){
+    throw new ApiError(httpStatus.BAD_REQUEST, "Thể loại không tồn tại");
+  }
+
   let images = await imageService.uploadManyImg(imageUpload, "ha-anh")
 
   const product = await Product.create({...productBody, images });
@@ -64,4 +79,4 @@ const deleteProductById = async (productId) => {
   }
 };
 
-module.exports = { getProducts, createProduct, updateProductById, deleteProductById };
+module.exports = { getProductById, getProducts, createProduct, updateProductById, deleteProductById };

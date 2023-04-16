@@ -34,6 +34,11 @@ module.exports = (sequelize, DataTypes) => {
         values: ["bank", "cash"],
         allowNull: false,
         defaultValue: "cash"
+      },
+      status: {
+        type: DataTypes.ENUM,
+        values: ["WAITING", "SUCCESS", "FAIL"],
+        defaultValue: "WAITING"
       }
     },
     {
@@ -45,6 +50,13 @@ module.exports = (sequelize, DataTypes) => {
     Order.belongsTo(models.User, {
       foreignKey: {
         name: "user_id",
+      },
+    });
+
+    Order.hasMany(models.ProductOrder, {
+      as: "products",
+      foreignKey: {
+        name: "order_id",
       },
     });
   };

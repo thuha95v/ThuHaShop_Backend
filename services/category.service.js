@@ -21,6 +21,10 @@ const createCategory = async (name) => {
   return category;
 };
 
+const getById = async(id) => {
+  return Category.findByPk(id)
+}
+
 const updateCategoryById = async (categoryId, name) => {
   const resultUpdate = await Category.update({ name }, {
     where: {
@@ -55,4 +59,4 @@ const deleteCategoryById = async (categoryId) => {
 
 };
 
-module.exports = { getCategories, createCategory, deleteCategoryById, updateCategoryById };
+module.exports = { getById, getCategories, createCategory, deleteCategoryById, updateCategoryById };

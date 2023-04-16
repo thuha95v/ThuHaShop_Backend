@@ -4,16 +4,20 @@ const db = require("../models")
 
 const errorConverter = (err, req, res, next) => {
   let statusCode = httpStatus.INTERNAL_SERVER_ERROR
-  let message = httpStatus[statusCode]
+  let message = err.message
+  
+  if(err instanceof ApiError){
+    return next(err)
+  }
 
   if (err instanceof db.Sequelize.ValidationError){
     statusCode = httpStatus.BAD_REQUEST
     message = err.message.replace(/Validation error|notNull Violation/, "Kiểm tra lại")
   } 
-  else if (!(err instanceof ApiError)) {
-    message = err.message;
-  }else {
-    return next(err)
+
+  if(err instanceof db.Sequelize.ForeignKeyConstraintError){
+    statusCode = httpStatus.BAD_REQUEST
+    message = "Vui lòng kiểm tra khóa ngoại"
   }
 
   const error = new ApiError(statusCode, message, false, err.stack);

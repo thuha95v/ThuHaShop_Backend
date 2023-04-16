@@ -11,12 +11,16 @@ const getPosts = (page, limit, q) => {
         [Op.like]: `%${q}%`
       }
     },
-    limit: parseInt(limit - 1),
-    offset: parseInt(page * limit)
+    limit: parseInt(limit),
+    offset: parseInt((page - 1) * limit)
   });
 };
 
-const createPost = async (postBody) => {
+const getPostById = async(id) => {
+  return Post.findByPk(id)
+}
+
+const create = async (postBody) => {
   const post = await Post.create(postBody);
   if (!post) {
     throw new ApiError(httpStatus.BAD_REQUEST, "Tạo bài viết lỗi");
@@ -60,4 +64,4 @@ const deletePostById = async (postId, userId) => {
   }
 };
 
-module.exports = { getPosts, createPost, updatePostById, deletePostById };
+module.exports = { getPostById, getPosts, create, updatePostById, deletePostById };

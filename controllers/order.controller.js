@@ -1,5 +1,5 @@
 const httpStatus = require("http-status");
-const { orderService } = require("../services");
+const { orderService, orderProductService } = require("../services");
 const catchAsync = require("../utils/catchAsync");
 
 const getOrders = catchAsync(async (req, res) => {
@@ -14,14 +14,15 @@ const createOrder = catchAsync(async (req, res) => {
   const order = {
     customer_address,
     phone,
-    pay_method
+    pay_method,
+    products
   } = req.body;
 
   order.user_id = user.id;
 
   let orderCreated = await orderService.createOrder(order);
-
-  res.status(httpStatus.CREATED).send({code: httpStatus.CREATED, data: orderCreated});
+  let orderProduct = await orderProductService.create(orderCreated.id, products)
+  res.status(httpStatus.CREATED).send({code: httpStatus.CREATED, data: "Thành công"});
 });
 
 const updateOrder = catchAsync(async (req, res) => {

@@ -1,23 +1,45 @@
 const { Op } = require("sequelize");
-const { Order } = require("../models");
+const { Order, ProductOrder, Product } = require("../models");
 
 const httpStatus = require("http-status");
 const ApiError = require("../utils/ApiError");
 
 const getOrders = (userId) => {
   return Order.findAll({
-    user_id: userId
+    user_id: userId,
+    include: { 
+      model: ProductOrder, as: "products",
+      include: {
+        model: Product, as: "info",
+        attributes: {
+          exclude: ["quanlity", "createdAt", "updatedAt", "category_id"]
+        }
+      }
+
+    }
   }
   );
 };
 
 const createOrder = async (orderBody) => {
-  const order = await Order.create(orderBody);
-  if (!order) {
+  // let order = await Order.findOne({
+  //   where: {
+  //     customer_address: orderBody.customer_address,
+  //     phone: orderBody.phone
+  //   }
+  // });
+
+
+  // if (order) {
+  //   throw new ApiError(httpStatus.BAD_REQUEST, "Địa chỉ hoặc số điện thoại đã tồn tại");
+  // }
+
+  let orderCreated = await Order.create(orderBody);
+  if (!orderCreated) {
     throw new ApiError(httpStatus.BAD_REQUEST, "Tạo order lỗi");
   }
 
-  return order
+  return orderCreated
 };
 
 const updateOrderById = async (orderId, orderBody) => {
