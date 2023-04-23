@@ -8,19 +8,63 @@ const getCart = catchAsync(async (req, res) => {
   res.status(httpStatus.OK).send({ code: httpStatus.OK, data: cart });
 });
 
-const createOrUpdate = catchAsync(async (req, res) => {
+const createOrUpdate = async (userId, products) => {
+  const cartManage = await CartManage.findOne({ where: { user_id: userId } });
+
+  if (!cartManage) {
+    const newCartManage = await CartManage.create({ user_id: userId });
+    let arrProduct = products.map((product) => {
+      return {
+        product_id: product,
+        cart_id: newCartManage.id,
+      };
+    });
+
+    await Cart.bulkCreate(arrProduct);
+  } else {
+    const deleteResult = await Cart.destroy({
+      where: {
+        cart_id: cartManage.id,
+      },
+      returning: true,
+      plain: true,
+    });
+
+    let arrProduct = products.map((product) => {
+      return {
+        ...product,
+        cart_id: cartManage.id,
+      };
+    });
+
+    await Cart.bulkCreate(arrProduct);
+  }
+};
+
+const openShareCart = catchAsync(async (req, res) => {
   let user = req.user;
-  const { products, history } = req.body
-  await cartService.createOrUpdateCart(user.id, products);
-
-  res.status(httpStatus.CREATED).send();
+  let cart = await cartService.openShareCart(user.id)
+  
+  res.status(httpStatus.OK).send({ code: httpStatus.OK, data: {
+    message: "Bật chia sẻ giỏ hàng thành công",
+    data: cart.link
+  } });
 });
 
-const deleteCategory = catchAsync(async (req, res) => {
-  const { id } = req.params
-  await categoryService.deleteCategoryById(id);
-
-  res.status(httpStatus.OK).send();
+const closeShareCart = catchAsync(async (req, res) => {
+  let user = req.user;
+  let cart = await cartService.closeShareCart(user.id)
+  
+  res.status(httpStatus.OK).send({ code: httpStatus.OK, data: "Tắt chia sẻ giỏ hàng thành công" });
 });
 
-module.exports = { getCart, createOrUpdate }
+const updateShareCart = catchAsync(async (req, res) => {
+  let { shareId = ""} = req.params;
+  let { products, history } = req.body
+
+  await cartService.updateShareCart(shareId, products, history)
+  
+  res.status(httpStatus.OK).send({ code: httpStatus.OK, data: "Cập nhật thành công" });
+});
+
+module.exports = { getCart, createOrUpdate, openShareCart, closeShareCart, updateShareCart }

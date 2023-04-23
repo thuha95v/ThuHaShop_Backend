@@ -34,7 +34,6 @@ const createProduct = async (productBody, imageUpload) => {
   }
 
   let images = await imageService.uploadManyImg(imageUpload, "ha-anh")
-
   const product = await Product.create({...productBody, images });
   if (!product) {
     throw new ApiError(httpStatus.BAD_REQUEST, "Tạo sản phẩm lỗi");

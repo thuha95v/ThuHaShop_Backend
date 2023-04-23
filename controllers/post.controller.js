@@ -34,7 +34,7 @@ const createPost = catchAsync(async (req, res) => {
 
   post.user_id = user.id;
 
-  let productCreated = await postService.createPost(post);
+  let productCreated = await postService.create(post);
 
   res.status(httpStatus.CREATED).send({code: httpStatus.CREATED, data: productCreated});
 });

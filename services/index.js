@@ -9,5 +9,4 @@ module.exports.cartService = require('./cart.service');
 module.exports.postService = require('./post.service');
 module.exports.orderService = require('./order.service');
 module.exports.orderProductService = require('./order_product.service');
-
-
+module.exports.idService = require('./id.service');

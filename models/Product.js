@@ -16,6 +16,11 @@ module.exports = (sequelize, DataTypes) => {
       name: {
         type: DataTypes.STRING,
         allowNull: false,
+        validate: {
+          notEmpty: {
+            msg: "Tên sản phẩm không được trống"
+          }
+        },
       },
       short_desc: {
         type: DataTypes.STRING,
