@@ -1,6 +1,7 @@
 const httpStatus = require('http-status');
 const ApiError = require('../utils/ApiError');
 const db = require("../models")
+const telegramQueue = require("../script/telegram")
 
 const errorConverter = (err, req, res, next) => {
   let statusCode = httpStatus.INTERNAL_SERVER_ERROR
@@ -45,6 +46,15 @@ const errorHandler = (err, req, res, next) => {
   if (process.env.NODE_ENV === 'development') {
     console.error(err);
   }
+
+  telegramQueue.add({
+    type: "ERROR",
+    data: {
+      code: statusCode,
+      error: message
+    }
+  })
+
   res.status(statusCode).send(response);
 };
 

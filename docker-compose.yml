@@ -14,6 +14,14 @@ services:
     volumes:
       - mysql:/var/lib/mysql
 
+  redis:
+    image: redis:7
+    ports:
+      - 6379:6379
+    networks:
+      - hshop-network
+    command: redis-server --requirepass !CnJbIcJqew
+
   backend:
     build: .
     image: hshop_be
@@ -21,9 +29,10 @@ services:
       - 3000:3000
     depends_on:
       - mysql
+      - redis
     networks:
       - hshop-network
-    command: npm start
+    command: npm run dev
 
 volumes:
   mysql:

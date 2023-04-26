@@ -1,5 +1,5 @@
 const { Op } = require("sequelize");
-const { ProductOrder } = require("../models");
+const { ProductOrder, Product } = require("../models");
 
 const httpStatus = require("http-status");
 const ApiError = require("../utils/ApiError");
@@ -7,6 +7,20 @@ const ApiError = require("../utils/ApiError");
 const getAll = (userId) => {
   return ProductOrder.findAll({
     user_id: userId,
+  })
+};
+
+const getAllByOrderID = (orderId) => {
+  return ProductOrder.findAll({
+    where: {
+      order_id: orderId,
+    },
+    include: { 
+      model: Product, as: "product",
+      attributes: {
+        exclude: ["createdAt", "quantity", "updatedAt", "order_id", "product_id"]
+      },
+    }
   })
 };
 
@@ -70,4 +84,4 @@ const create = async (orderId, data) => {
 //   }
 // };
 
-module.exports = { create, getAll };
+module.exports = { create, getAll, getAllByOrderID };

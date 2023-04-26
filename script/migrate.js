@@ -1,7 +1,7 @@
 const db = require("../models");
 
 db.sequelize
-  .sync({ alert: true })
+  .sync({ alert: true, force: true })
   .then(() => {
     console.log("Migrate success...");
   })

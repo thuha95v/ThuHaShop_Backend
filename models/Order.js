@@ -35,6 +35,10 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         defaultValue: "cash"
       },
+      note: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
       status: {
         type: DataTypes.ENUM,
         values: ["WAITING", "SUCCESS", "FAIL"],

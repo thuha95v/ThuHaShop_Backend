@@ -7,7 +7,6 @@ const port = portConfig || 3000;
 
 const routes = require("./routes");
 const { errorConverter, errorHandler } = require("./middlewares/error");
-
 app.use(cors())
 
 app.use(express.json());

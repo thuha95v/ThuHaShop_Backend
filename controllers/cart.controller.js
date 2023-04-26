@@ -8,38 +8,13 @@ const getCart = catchAsync(async (req, res) => {
   res.status(httpStatus.OK).send({ code: httpStatus.OK, data: cart });
 });
 
-const createOrUpdate = async (userId, products) => {
-  const cartManage = await CartManage.findOne({ where: { user_id: userId } });
+const createOrUpdate = catchAsync(async (req, res) => {
+  let user = req.user;
+  const { products } = req.body
+  await cartService.createOrUpdateCart(user.id, products);
 
-  if (!cartManage) {
-    const newCartManage = await CartManage.create({ user_id: userId });
-    let arrProduct = products.map((product) => {
-      return {
-        product_id: product,
-        cart_id: newCartManage.id,
-      };
-    });
-
-    await Cart.bulkCreate(arrProduct);
-  } else {
-    const deleteResult = await Cart.destroy({
-      where: {
-        cart_id: cartManage.id,
-      },
-      returning: true,
-      plain: true,
-    });
-
-    let arrProduct = products.map((product) => {
-      return {
-        ...product,
-        cart_id: cartManage.id,
-      };
-    });
-
-    await Cart.bulkCreate(arrProduct);
-  }
-};
+  res.status(httpStatus.CREATED).send({ code: httpStatus.OK, data: "Thành công" });
+});
 
 const openShareCart = catchAsync(async (req, res) => {
   let user = req.user;

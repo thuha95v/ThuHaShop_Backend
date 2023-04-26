@@ -9,13 +9,19 @@ const getOrders = (userId) => {
     user_id: userId,
     include: { 
       model: ProductOrder, as: "products",
+      attributes: {
+        exclude: ["createdAt", "updatedAt", "order_id", "product_id"]
+      },
       include: {
-        model: Product, as: "info",
+        model: Product, as: "product",
         attributes: {
-          exclude: ["quanlity", "createdAt", "updatedAt", "category_id"]
+          exclude: ["quantity", "createdAt", "updatedAt", "category_id"]
         }
       }
 
+    },
+    attributes: {
+      exclude: ["createdAt", "updatedAt"]
     }
   }
   );

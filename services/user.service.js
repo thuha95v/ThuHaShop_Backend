@@ -12,6 +12,10 @@ const getUsers = () => {
   return userModel.findAll();
 };
 
+const getUserById = (id) => {
+  return userModel.findByPk(id);
+};
+
 /**
  * Get user by userId
  * @param {ObjectId} userId ;
@@ -145,6 +149,7 @@ const getUserByEmail = async (emailUser) => {
 
 module.exports = {
   getUsers,
+  getUserById,
   getUser,
   createUser,
   updateUser,
