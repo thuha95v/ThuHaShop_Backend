@@ -18,7 +18,13 @@ const getProducts = (page, limit, name) => {
 };
 
 const getProductById = async(id) => {
-  return Product.findByPk(id)
+  const product = await Product.findByPk(id)
+
+  if(!product){
+    throw new ApiError(httpStatus.BAD_REQUEST, "Sản phẩm không tồn tại");
+  }
+
+  return product
 }
 
 const createProduct = async (productBody, imageUpload) => {

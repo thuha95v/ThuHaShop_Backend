@@ -9,9 +9,9 @@ const getCategories = catchAsync(async (req, res) => {
 
 const createCategory = catchAsync(async (req, res) => {
   const { name } = req.body
-  await categoryService.createCategory(name);
+  let category = await categoryService.createCategory(name);
 
-  res.status(httpStatus.CREATED).send();
+  res.status(httpStatus.CREATED).send({ code: httpStatus.CREATED, data: category});
 });
 
 const updateCategory = catchAsync(async (req, res) => {

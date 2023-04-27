@@ -5,6 +5,8 @@
   "main": "ecosystem.config.js",
   "scripts": {
     "start": "cross-env NODE_ENV=production node server.js",
+    "product": "sudo docker compose up --build -d",
+    "down": "sudo docker compose down",
     "dev": "cross-env NODE_ENV=development nodemon server.js",
     "sync-db": "node ./script/migrate.js",
     "db": "sudo docker compose up -d --build mysql",

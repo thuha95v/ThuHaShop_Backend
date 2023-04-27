@@ -74,7 +74,7 @@ module.exports = (sequelize, DataTypes) => {
   };
 
   Product.addHook("beforeValidate", (product) => {
-    if (product.isNewRecord) {
+    if (product.isNewRecord && product?.name) {
       product.slug = slugify(product.name, {
         lower: true,
         remove: undefined,

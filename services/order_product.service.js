@@ -1,4 +1,4 @@
-const { Op } = require("sequelize");
+const { Op, where } = require("sequelize");
 const { ProductOrder, Product } = require("../models");
 
 const httpStatus = require("http-status");
@@ -32,6 +32,34 @@ const create = async (orderId, data) => {
     }
   })
 
+  let products = await Product.findAll({
+    where: {
+      id: data.map(p => p.product_id),
+    },
+    attributes: ['id', 'quantity', "name"]
+  })
+
+  const mapProduct = new Map()
+
+  for (const product of products) {
+    mapProduct.set(product.id, `${product.name}:${product.quantity}`)
+  }
+
+  const updatePromises = []
+  for (const product of orderProduct) {
+    let [ name, quantity ] = mapProduct.get(product.product_id).split(":")
+    if(product.quantity > parseInt(quantity)){
+      throw new ApiError(httpStatus.BAD_REQUEST, `Sản phẩm ${name} không đủ số lượng trong kho` );
+    }else {
+      updatePromises.push(Product.update({ quantity: parseInt(quantity) - product.quantity }, {
+        where: {
+          id: product.product_id,
+        }
+      }))
+    }
+  }
+
+  await Promise.all(updatePromises)
   await ProductOrder.bulkCreate(orderProduct)
 
   // return orderProduct

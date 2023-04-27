@@ -32,7 +32,7 @@ services:
       - redis
     networks:
       - hshop-network
-    command: npm run dev
+    command: npm run start
 
 volumes:
   mysql:

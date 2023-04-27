@@ -17,7 +17,12 @@ const getPosts = (page, limit, q) => {
 };
 
 const getPostById = async(id) => {
-  return Post.findByPk(id)
+  let post = await Post.findByPk(id)
+
+  if(!post){
+    throw new ApiError(httpStatus.BAD_REQUEST, "Bài viết không tồn tại");
+  }
+  return post
 }
 
 const create = async (postBody) => {
