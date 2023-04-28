@@ -1,3 +1,5 @@
+const idService = require("../services/id.service")
+
 module.exports = (sequelize, DataTypes) => {
   let Campaign = sequelize.define(
     "Campaign",
@@ -30,6 +32,12 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
+  Campaign.addHook("beforeValidate", (campaign) => {
+    if (campaign.isNewRecord) {
+      campaign.link = `/san-pham/${idService.generateId()}`
+    }
+  });
+
   Campaign.associate = (models) => {
     Campaign.belongsTo(models.User, {
       foreignKey: {
@@ -38,6 +46,7 @@ module.exports = (sequelize, DataTypes) => {
     });
 
     Campaign.belongsTo(models.Product, {
+      as: "product",
       foreignKey: {
         name: "product_id",
       },

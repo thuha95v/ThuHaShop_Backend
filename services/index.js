@@ -10,3 +10,4 @@ module.exports.postService = require('./post.service');
 module.exports.orderService = require('./order.service');
 module.exports.orderProductService = require('./order_product.service');
 module.exports.idService = require('./id.service');
+module.exports.campaignService = require('./campaign.service');

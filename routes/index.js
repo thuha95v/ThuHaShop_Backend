@@ -10,7 +10,7 @@ const productRouter = require('./product.route');
 const cartRouter = require('./cart.route');
 const postRouter = require('./post.route');
 const orderRouter = require('./order.route');
-
+const affiliateRoute = require("./campaign.route")
 
 // No auth
 const defaultRoutes = [
@@ -44,6 +44,10 @@ const protectRoutes = [
   {
     path: "/cart",
     route: cartRouter
+  },
+  {
+    path: "/affiliates",
+    route: affiliateRoute
   }
 ];
 
