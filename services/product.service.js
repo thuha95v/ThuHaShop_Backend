@@ -50,6 +50,10 @@ const createProduct = async (productBody, imageUpload) => {
 
 const updateProductById = async (productId, productBody, imageUpload) => {
 
+  if(!imageUpload){
+    throw new ApiError(httpStatus.BAD_REQUEST, "Ảnh là bắt buộc");
+  }
+
   let images = await imageService.uploadManyImg(imageUpload, "ha-anh")
 
   const resultUpdate = await Product.update({...productBody, images}, {
@@ -79,7 +83,7 @@ const deleteProductById = async (productId) => {
   if (!product) {
     throw new ApiError(
       httpStatus.BAD_REQUEST,
-      "id không tồn tại"
+      "Sản phẩm không tồn tại"
     );
   }
 };

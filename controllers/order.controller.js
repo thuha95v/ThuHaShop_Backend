@@ -1,6 +1,6 @@
 const httpStatus = require("http-status");
 const { orderService, orderProductService } = require("../services");
-const telegramQueue = require("../script/telegram")
+const { telegramQueue, productQueue } = require("../script")
 const catchAsync = require("../utils/catchAsync");
 
 const getOrders = catchAsync(async (req, res) => {
@@ -25,6 +25,7 @@ const createOrder = catchAsync(async (req, res) => {
   let orderCreated = await orderService.createOrder(order);
   let orderProduct = await orderProductService.create(orderCreated.id, products)
   telegramQueue.add({ type: "ORDER", data: { orderId: orderCreated.id, userId: user.id, status: orderCreated.status } })
+  productQueue.add({ type: "QUANTITY", data: products})
   res.status(httpStatus.CREATED).send({code: httpStatus.CREATED, data: orderCreated});
 });
 

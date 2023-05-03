@@ -1,19 +1,14 @@
 const { Op } = require("sequelize");
-const models = require("../models/index.js");
+const { User } = require("../models");
 const httpStatus = require("http-status");
 const ApiError = require("../utils/ApiError");
-const userModel = models.User;
 
-/**
- * Get users
- *@returns {Promise<userModel>};
- */
 const getUsers = () => {
-  return userModel.findAll();
+  return User.findAll();
 };
 
 const getUserById = (id) => {
-  return userModel.findByPk(id);
+  return User.findByPk(id);
 };
 
 /**
@@ -24,7 +19,7 @@ const getUserById = (id) => {
  */
 
 const getUser = async (userId) => {
-  const user = await userModel.findByPk(userId);
+  const user = await User.findByPk(userId);
 
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, "Can not found user by user id ");
@@ -40,10 +35,28 @@ const getUser = async (userId) => {
  */
 
 const createUser = async (userCreate) => {
-  const user = await userModel.create(userCreate);
+  const user = await User.create(userCreate);
 
   if (!user) {
     throw new ApiError(httpStatus.BAD_REQUEST, "Can not create new user");
+  }
+
+  return user;
+};
+
+const lockAndUnlock = async (userId, isLock) => {
+  const user = await User.update(
+    { isLock },
+    {
+      where: {
+        id: userId,
+      },
+      returning: true,
+    }
+  );
+
+  if (user[1] == 0) {
+    throw new ApiError(httpStatus.BAD_REQUEST, "Người dùng không tồn tại");
   }
 
   return user;
@@ -57,7 +70,7 @@ const createUser = async (userCreate) => {
  */
 
 const updateUser = async (userUpdate, userId) => {
-  const user = await userModel.update(userUpdate, {
+  const user = await User.update(userUpdate, {
     where: {
       id: userId,
     },
@@ -79,7 +92,7 @@ const updateUser = async (userUpdate, userId) => {
  */
 
 const deleteUser = async (userId) => {
-  const user = await userModel.destroy({
+  const user = await User.destroy({
     where: {
       id: userId,
     },
@@ -88,10 +101,7 @@ const deleteUser = async (userId) => {
   });
 
   if (!user) {
-    throw new ApiError(
-      httpStatus.BAD_REQUEST,
-      "Can not delete user with userId"
-    );
+    throw new ApiError(httpStatus.BAD_REQUEST, "");
   }
 
   return user;
@@ -104,24 +114,25 @@ const deleteUser = async (userId) => {
  */
 
 const getUserByAccount = async (account) => {
-  const user = await userModel.findOne({
+  const user = await User.findOne({
     where: {
       [Op.or]: [
-				{
-					username: account
-				},
-				{
-					email: account
-				}
-			]
+        {
+          username: account,
+        },
+        {
+          email: account,
+        },
+      ],
     },
   });
 
   if (!user) {
-    throw new ApiError(
-      httpStatus.NOT_FOUND,
-      "Tài khoản không tồn tại"
-    );
+    throw new ApiError(httpStatus.NOT_FOUND, "Tài khoản không tồn tại");
+  }
+
+  if (user.isLock) {
+    throw new ApiError(httpStatus.NOT_FOUND, "Tài khoản của bạn đã bị khóa");
   }
 
   return user;
@@ -156,4 +167,5 @@ module.exports = {
   deleteUser,
   getUserByAccount,
   getUserByEmail,
+  lockAndUnlock,
 };

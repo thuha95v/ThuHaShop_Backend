@@ -6,7 +6,7 @@ const { User } = require("../models");
 const { jwt: jwtConfig } = require("../config")
 const catchAsync = require("../utils/catchAsync");
 
-exports.protect = catchAsync(async (req, res, next) => {
+const protect = catchAsync(async (req, res, next) => {
   let token;
   if (req.headers.authorization?.startsWith("Bearer")) {
     token = req.headers.authorization.split(" ")[1];
@@ -26,3 +26,15 @@ exports.protect = catchAsync(async (req, res, next) => {
   req.user = user;
   return next();
 });
+
+const authorize = (roles) => catchAsync(async (req, res, next) => {
+  const user = await User.findByPk(req.user.id);
+
+  if(!roles.includes(user.role)){
+    throw new ApiError(httpStatus.FORBIDDEN, 'Bạn không có quyền thao tác');
+  }
+
+  return next();
+});
+
+module.exports = { protect, authorize }

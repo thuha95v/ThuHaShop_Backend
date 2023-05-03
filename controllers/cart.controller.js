@@ -10,8 +10,8 @@ const getCart = catchAsync(async (req, res) => {
 
 const createOrUpdate = catchAsync(async (req, res) => {
   let user = req.user;
-  const { products } = req.body
-  await cartService.createOrUpdateCart(user.id, products);
+  const { products, history } = req.body
+  await cartService.createOrUpdateCart(user.id, products, history);
 
   res.status(httpStatus.CREATED).send({ code: httpStatus.OK, data: "Thành công" });
 });

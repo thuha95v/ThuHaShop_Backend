@@ -15,9 +15,9 @@ notiQueue.process(async function (job, done) {
     const { type, data } = job.data
     if(type == "ERROR"){
       sendMessTelegram(""+
-      "❌ CẢNH BÁO: LỖI HỆ THỐNG%0A"+
-      `🚦 Mã lỗi: ${data.code}%0A`+
-      `📌 Message lỗi: ${data.error}`
+      "❌ *CẢNH BÁO: LỖI HỆ THỐNG* %0A"+
+      `🚦 Mã lỗi: *${data.code}* %0A`+
+      `📌 Thông báo lỗi: *${data.error}*`
       )
     } 
 

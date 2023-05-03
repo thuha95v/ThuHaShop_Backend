@@ -30,7 +30,7 @@ const getCartByUserId = async (userId) => {
   return result;
 };
 
-const createOrUpdateCart = async (userId, data) => {
+const createOrUpdateCart = async (userId, data, history) => {
   const result = await Promise.all([
     CartManage.findOne({ where: { user_id: userId } }),
     Product.findAll({
@@ -61,13 +61,24 @@ const createOrUpdateCart = async (userId, data) => {
     const newCartManage = await CartManage.create({ user_id: userId });
     cartId = newCartManage.id
   } else {
-    await Cart.destroy({
-      where: {
-        cart_id: cartManage.id,
-      },
-      returning: true,
-      plain: true,
-    });
+
+    if(cartManage.status && cartManage.history.length == 0){
+      cartManage.history = history
+    } else { 
+      cartManage.history.push(...history)
+      cartManage.changed('history', true);
+    }
+
+    await Promise.all([
+      cartManage.save(),
+      Cart.destroy({
+        where: {
+          cart_id: cartManage.id,
+        },
+        returning: true,
+        plain: true,
+      })
+    ])
   }
 
   let arrProduct = data.map((product) => {
