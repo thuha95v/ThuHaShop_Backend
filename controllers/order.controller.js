@@ -1,11 +1,11 @@
 const httpStatus = require("http-status");
 const { orderService, orderProductService } = require("../services");
-const { telegramQueue, productQueue } = require("../script")
+const { telegramQueue, productQueue, orderQueue } = require("../script")
 const catchAsync = require("../utils/catchAsync");
 
-const getOrders = catchAsync(async (req, res) => {
+const getOrdersByUserId = catchAsync(async (req, res) => {
   let { id } = req.user
-  let orders = await orderService.getOrders(id);
+  let orders = await orderService.getOrdersByUserId(id);
   res.status(httpStatus.OK).send({ code: httpStatus.OK, data: orders });
 });
 
@@ -51,4 +51,22 @@ const deleteOrder = catchAsync(async (req, res) => {
   res.status(httpStatus.OK).send();
 });
 
-module.exports = { getOrders, createOrder, updateOrder, deleteOrder };
+const approve = catchAsync(async (req, res) => {
+  const { id } = req.params
+  const { status, note } = req.body;
+  await orderService.approve(id, status);
+
+  if(status == "fail"){
+    orderQueue.add({ type: "FAIL", data: { id, note } })
+  }
+  
+  res.status(httpStatus.OK).send({ code: httpStatus.OK, data: "Thành công" });
+});
+
+const getAll = catchAsync(async (req, res) => {
+  const { status } = req.query
+  let orders = await orderService.getAll(status);
+  res.status(httpStatus.OK).send({ code: httpStatus.OK, data: orders });
+});
+
+module.exports = { getAll, getOrdersByUserId, createOrder, updateOrder, deleteOrder, approve };

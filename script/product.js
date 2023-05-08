@@ -3,7 +3,7 @@ const { sendMessTelegram } = require("../utils/callAPI")
 const { productService } = require("../services")
 const { redis }= require("../config");
 
-const productQueue = new Queue('Product', { redis: { port: redis.port, host: redis.host, password: redis.password } });
+const productQueue = new Queue('product', { redis: { port: redis.port, host: redis.host, password: redis.password } });
 
 productQueue.on('error', (error) => {
   console.log("Error connect redis", error);
@@ -15,10 +15,9 @@ productQueue.process(async function (job, done) {
     if(type == "QUANTITY"){
 
       for(const p of data){
-        // console.log(p);
         let product = await productService.getProductById(p.product_id)
 
-        if(product){
+        if(product.quantity == 0){
           sendMessTelegram(""+
             "🚛 *THÔNG BÁO: CÓ SẢN PHẨM HẾT HÀNG* %0A"+
             `📌 Mã sản phẩm: *${product.id}* %0A`+
@@ -27,8 +26,6 @@ productQueue.process(async function (job, done) {
           )
         }
       } 
-
-      
     } 
 
     done();

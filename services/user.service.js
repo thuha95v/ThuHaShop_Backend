@@ -69,7 +69,7 @@ const lockAndUnlock = async (userId, isLock) => {
  * @returns {<Promise<userModel>};
  */
 
-const updateUser = async (userUpdate, userId) => {
+const updateUser = async (userId, userUpdate) => {
   const user = await User.update(userUpdate, {
     where: {
       id: userId,
@@ -78,8 +78,9 @@ const updateUser = async (userUpdate, userId) => {
     plain: true,
   });
 
-  if (!user) {
-    throw new ApiError(httpStatus.BAD_REQUEST, "Can not update user");
+  console.log(user);
+  if (user[1] == 0) {
+    throw new ApiError(httpStatus.BAD_REQUEST, "Người dùng không tồn tại");
   }
 
   return user;

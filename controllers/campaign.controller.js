@@ -2,8 +2,13 @@ const httpStatus = require("http-status");
 const { campaignService } = require("../services");
 const catchAsync = require("../utils/catchAsync");
 
+const getAllByUserId = catchAsync(async (req, res) => {
+  let campaigns = await campaignService.getAllByUserId(req.user.id)
+  res.status(httpStatus.OK).send({ code: httpStatus.OK, data: campaigns });
+});
+
 const getAll = catchAsync(async (req, res) => {
-  let campaigns = await campaignService.getAll(req.user.id)
+  let campaigns = await campaignService.getAll()
   res.status(httpStatus.OK).send({ code: httpStatus.OK, data: campaigns });
 });
 
@@ -25,6 +30,14 @@ const update = catchAsync(async (req, res) => {
   res.status(httpStatus.OK).send({ code: httpStatus.OK, data: campaign });
 });
 
+const approve = catchAsync(async (req, res) => {
+  const { id } = req.params
+  const { status } = req.body;
+  let campaign = await campaignService.approve(id, status);
+
+  res.status(httpStatus.OK).send({ code: httpStatus.OK, data: "Thành công" });
+});
+
 const deleteById = catchAsync(async (req, res) => {
   const { id } = req.params
   await campaignService.deleteById(id, req.user.id);
@@ -32,4 +45,4 @@ const deleteById = catchAsync(async (req, res) => {
   res.status(httpStatus.OK).send();
 });
 
-module.exports = { getAll, create, update, deleteById }
+module.exports = { getAll, approve, getAllByUserId, create, update, deleteById }

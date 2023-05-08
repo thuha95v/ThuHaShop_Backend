@@ -24,8 +24,16 @@ const lockAndUnlock = catchAsync(async (req, res) => {
   }
 });
 
+const update = catchAsync(async (req, res) => {
+  const { id: userId } = req.user
+  const data = { first_name, last_name, username, email, phone, gender, birthday } = req.body
+  await userService.updateUser(userId, data);
+  res.status(httpStatus.OK).send({ code: httpStatus.OK, data: "Cập nhật thành công" });
+});
+
 module.exports = {
   getMe,
   getUsers,
-  lockAndUnlock
+  lockAndUnlock,
+  update
 };

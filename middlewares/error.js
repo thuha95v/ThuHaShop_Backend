@@ -45,13 +45,13 @@ const errorHandler = (err, req, res, next) => {
 
   console.error(err);
 
-  // telegramQueue.add({
-  //   type: "ERROR",
-  //   data: {
-  //     code: statusCode,
-  //     error: message
-  //   }
-  // })
+  telegramQueue.add({
+    type: "ERROR",
+    data: {
+      code: statusCode,
+      error: message
+    }
+  })
 
   res.status(statusCode).send(response);
 };

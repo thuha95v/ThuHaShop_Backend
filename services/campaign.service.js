@@ -3,7 +3,14 @@ const { Campaign, Product } = require("../models");
 const httpStatus = require("http-status");
 const ApiError = require("../utils/ApiError");
 
-const getAll = (userId) => {
+const getAll = () => {
+  return Campaign.findAll({
+    include: { model: Product, as: "product", attributes: ["name", "slug"]}
+  });
+};
+
+
+const getAllByUserId = (userId) => {
   return Campaign.findAll({
     where: {
       user_id: userId,
@@ -31,6 +38,19 @@ const create = async (data) => {
 // const getById = async(id) => {
 //   return Category.findByPk(id)
 // }
+
+const approve = async (campaignId, status) => {
+  const resultUpdate = await Campaign.update({ status }, {
+    where: {
+      id: campaignId,
+    },
+    individualHooks: true,
+  });
+
+  if (resultUpdate[1].length == 0) {
+    throw new ApiError(httpStatus.BAD_REQUEST, "Chiến dịch không tồn tại");
+  }
+}
 
 const updateById = async (campaignId, data) => {
   const resultUpdate = await Campaign.update(data, {
@@ -73,4 +93,4 @@ const deleteById = async (campaignId, userId) => {
 
 };
 
-module.exports = { getAll, create, updateById, deleteById };
+module.exports = { getAll, approve, getAllByUserId, create, updateById, deleteById };

@@ -88,4 +88,9 @@ const deleteProductById = async (productId) => {
   }
 };
 
-module.exports = { getProductById, getProducts, createProduct, updateProductById, deleteProductById };
+const increment = async(id, quantity) => {
+  let product = await Product.findByPk(id);
+  await product.increment("quantity", { by: quantity }) 
+}
+
+module.exports = { getProductById, getProducts, createProduct, updateProductById, deleteProductById, increment };

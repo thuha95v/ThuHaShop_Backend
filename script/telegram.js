@@ -4,7 +4,7 @@ const statusOrder = require("../types/order.type")
 const { orderProductService, userService } = require("../services")
 const { redis }= require("../config");
 
-const notiQueue = new Queue('Telegram', { redis: { port: redis.port, host: redis.host, password: redis.password } });
+const notiQueue = new Queue('telegram', { redis: { port: redis.port, host: redis.host, password: redis.password } });
 
 notiQueue.on('error', (error) => {
   console.log("Error connect redis", error);
